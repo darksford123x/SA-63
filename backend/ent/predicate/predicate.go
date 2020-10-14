@@ -6,14 +6,5 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
-// Device is the predicate function for device builders.
-type Device func(*sql.Selector)
-
-// RepairInvoice is the predicate function for repairinvoice builders.
-type RepairInvoice func(*sql.Selector)
-
-// Status is the predicate function for status builders.
-type Status func(*sql.Selector)
-
-// Symptom is the predicate function for symptom builders.
-type Symptom func(*sql.Selector)
+// User is the predicate function for user builders.
+type User func(*sql.Selector)

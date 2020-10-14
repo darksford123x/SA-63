@@ -13,13 +13,7 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import { Alert } from '@material-ui/lab';
 import { DefaultApi } from '../../api/apis';
-import ComponanceStatus from '../Status';
-import ComponanceDevice from '../Device';
-import ComponanceRepair from '../Repair';
-import ComponanceTable from '../Table';
-import ComponanceSymptom from '../Symptom';
-
-
+ 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
    root: {
@@ -40,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
  
 const initialUserState = {
- name: 'Asadayuth Ja',
+ name: 'System Analysis and Design',
  age: 20,
 };
  
@@ -95,11 +89,66 @@ export default function Create() {
        </ContentHeader>
        <div className={classes.root}>
          <form noValidate autoComplete="off">
-         <ComponanceRepair></ComponanceRepair>
-          <ComponanceDevice></ComponanceDevice>
-          <ComponanceStatus></ComponanceStatus>
-          <ComponanceSymptom></ComponanceSymptom>
-           
+           <FormControl
+             fullWidth
+             className={classes.margin}
+             variant="outlined"
+           >
+             <TextField
+               id="name"
+               label="Name"
+               variant="outlined"
+               type="string"
+               size="medium"
+               onChange={handleInputChange}
+             />
+           </FormControl>
+ 
+           <FormControl
+             fullWidth
+             className={classes.margin}
+             variant="outlined"
+           >
+             <TextField
+               id="age"
+               label="equipment"
+               variant="outlined"
+               type="number"
+               size="medium"
+               onChange={handleInputChange}
+             />
+           </FormControl>
+
+           <FormControl
+             fullWidth
+             className={classes.margin}
+             variant="outlined"
+           >
+             <TextField
+               id="age"
+               label="symptom"
+               variant="outlined"
+               type="number"
+               size="medium"
+               onChange={handleInputChange}
+             />
+           </FormControl>
+
+           <FormControl
+             fullWidth
+             className={classes.margin}
+             variant="outlined"
+           >
+             <TextField
+               id="age"
+               label="price"
+               variant="outlined"
+               type="number"
+               size="medium"
+               onChange={handleInputChange}
+             />
+           </FormControl>
+ 
  <div className={classes.margin}>
    <Button
      onClick={() => {
@@ -108,18 +157,16 @@ export default function Create() {
      variant="contained"
      color="primary"
    >
-     SAVE
+     Submit
    </Button>
    <Button
      style={{ marginLeft: 20 }}
      component={RouterLink}
      to="/"
      variant="contained"
-     color="secondary"
    >
-     CANCEL
+     Back
    </Button>
-   <ComponanceTable></ComponanceTable>
  </div>
 </form>
 </div>

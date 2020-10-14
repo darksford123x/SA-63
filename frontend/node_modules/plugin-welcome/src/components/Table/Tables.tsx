@@ -43,9 +43,9 @@ export default function ComponentsTable() {
          <TableRow>
            <TableCell align="center">No.</TableCell>
            <TableCell align="center">Name</TableCell>
-           <TableCell align="center">Device</TableCell>
+           <TableCell align="center">Equipment</TableCell>
            <TableCell align="center">Symptom</TableCell>
-           <TableCell align="center">Status</TableCell>
+           <TableCell align="center">Price</TableCell>
          </TableRow>
        </TableHead>
        <TableBody>
@@ -53,9 +53,7 @@ export default function ComponentsTable() {
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.name}</TableCell>
-             <TableCell align="center">acer s254</TableCell>
-             <TableCell align="center">Damaged Softwre</TableCell>
-             <TableCell align="center">In Process</TableCell>
+             <TableCell align="center">{item.age}</TableCell>
              <TableCell align="center">
                <Button
                  onClick={() => {
@@ -63,9 +61,9 @@ export default function ComponentsTable() {
                  }}
                  style={{ marginLeft: 10 }}
                  variant="contained"
-                 color="primary"
+                 color="secondary"
                >
-                 Print
+                 Delete
                </Button>
              </TableCell>
            </TableRow>

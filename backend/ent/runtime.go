@@ -4,24 +4,21 @@ package ent
 
 import (
 	"github.com/darksford123x/app/ent/schema"
-	"github.com/darksford123x/app/ent/status"
-	"github.com/darksford123x/app/ent/symptom"
+	"github.com/darksford123x/app/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
-	statusFields := schema.Status{}.Fields()
-	_ = statusFields
-	// statusDescStatusName is the schema descriptor for Status_name field.
-	statusDescStatusName := statusFields[1].Descriptor()
-	// status.StatusNameValidator is a validator for the "Status_name" field. It is called by the builders before save.
-	status.StatusNameValidator = statusDescStatusName.Validators[0].(func(string) error)
-	symptomFields := schema.Symptom{}.Fields()
-	_ = symptomFields
-	// symptomDescSymptomName is the schema descriptor for Symptom_name field.
-	symptomDescSymptomName := symptomFields[1].Descriptor()
-	// symptom.SymptomNameValidator is a validator for the "Symptom_name" field. It is called by the builders before save.
-	symptom.SymptomNameValidator = symptomDescSymptomName.Validators[0].(func(string) error)
+	userFields := schema.User{}.Fields()
+	_ = userFields
+	// userDescAge is the schema descriptor for age field.
+	userDescAge := userFields[0].Descriptor()
+	// user.AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	user.AgeValidator = userDescAge.Validators[0].(func(int) error)
+	// userDescName is the schema descriptor for name field.
+	userDescName := userFields[1].Descriptor()
+	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	user.NameValidator = userDescName.Validators[0].(func(string) error)
 }
