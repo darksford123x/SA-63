@@ -6,37 +6,37 @@ import (
 	"strconv"
 
 	"github.com/darksford123x/app/ent"
-	"github.com/darksford123x/app/ent/user"
+	"github.com/darksford123x/app/ent/status"
 	"github.com/gin-gonic/gin"
 )
 
-// UserController defines the struct for the user controller
-type UserController struct {
+// StatusController defines the struct for the status controller
+type StatusController struct {
 	client *ent.Client
 	router gin.IRouter
 }
 
-// CreateUser handles POST requests for adding user entities
-// @Summary Create user
-// @Description Create user
-// @ID create-user
+// CreateStatus handles POST requests for adding status entities
+// @Summary Create status
+// @Description Create status
+// @ID create-status
 // @Accept   json
 // @Produce  json
-// @Param user body ent.User true "User entity"
-// @Success 200 {object} ent.User
+// @Param status body ent.Status true "Status entity"
+// @Success 200 {object} ent.Status
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /users [post]
-func (ctl *UserController) CreateUser(c *gin.Context) {
-	obj := ent.User{}
+// @Router /statuses [post]
+func (ctl *StatusController) CreateStatus(c *gin.Context) {
+	obj := ent.Status{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
-			"error": "user binding failed",
+			"error": "status binding failed",
 		})
 		return
 	}
 
-	u, err := ctl.client.User.
+	u, err := ctl.client.Status.
 		Create().
 		SetAge(obj.Age).
 		SetName(obj.Name).
@@ -51,18 +51,18 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 	c.JSON(200, u)
 }
 
-// GetUser handles GET requests to retrieve a user entity
-// @Summary Get a user entity by ID
-// @Description get user by ID
-// @ID get-user
+// GetStatus handles GET requests to retrieve a status entity
+// @Summary Get a Status entity by ID
+// @Description get Status by ID
+// @ID get-Status
 // @Produce  json
-// @Param id path int true "User ID"
-// @Success 200 {object} ent.User
+// @Param id path int true "Status ID"
+// @Success 200 {object} ent.Status
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /users/{id} [get]
-func (ctl *UserController) GetUser(c *gin.Context) {
+// @Router /statuses/{id} [get]
+func (ctl *StatusController) GetStatus(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -71,9 +71,9 @@ func (ctl *UserController) GetUser(c *gin.Context) {
 		return
 	}
 
-	u, err := ctl.client.User.
+	u, err := ctl.client.Status.
 		Query().
-		Where(user.IDEQ(int(id))).
+		Where(status.IDEQ(int(id))).
 		Only(context.Background())
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -85,18 +85,18 @@ func (ctl *UserController) GetUser(c *gin.Context) {
 	c.JSON(200, u)
 }
 
-// ListUser handles request to get a list of user entities
-// @Summary List user entities
-// @Description list user entities
-// @ID list-user
+// ListStatus handles request to get a list of status entities
+// @Summary List status entities
+// @Description list status entities
+// @ID list-status
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {array} ent.User
+// @Success 200 {array} ent.Status
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /users [get]
-func (ctl *UserController) ListUser(c *gin.Context) {
+// @Router /statuses [get]
+func (ctl *StatusController) ListStatus(c *gin.Context) {
 	limitQuery := c.Query("limit")
 	limit := 10
 	if limitQuery != "" {
@@ -115,7 +115,7 @@ func (ctl *UserController) ListUser(c *gin.Context) {
 		}
 	}
 
-	users, err := ctl.client.User.
+	statuses, err := ctl.client.Status.
 		Query().
 		Limit(limit).
 		Offset(offset).
@@ -125,21 +125,21 @@ func (ctl *UserController) ListUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, users)
+	c.JSON(200, statuses)
 }
 
-// DeleteUser handles DELETE requests to delete a user entity
-// @Summary Delete a user entity by ID
-// @Description get user by ID
-// @ID delete-user
+// DeleteStatus handles DELETE requests to delete a status entity
+// @Summary Delete a status entity by ID
+// @Description get status by ID
+// @ID delete-status
 // @Produce  json
-// @Param id path int true "User ID"
+// @Param id path int true "Status ID"
 // @Success 200 {object} gin.H
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /users/{id} [delete]
-func (ctl *UserController) DeleteUser(c *gin.Context) {
+// @Router /statuses/{id} [delete]
+func (ctl *StatusController) DeleteStatus(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -148,7 +148,7 @@ func (ctl *UserController) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	err = ctl.client.User.
+	err = ctl.client.Status.
 		DeleteOneID(int(id)).
 		Exec(context.Background())
 	if err != nil {
@@ -161,19 +161,19 @@ func (ctl *UserController) DeleteUser(c *gin.Context) {
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
 }
 
-// UpdateUser handles PUT requests to update a user entity
-// @Summary Update a user entity by ID
-// @Description update user by ID
-// @ID update-user
+// UpdateStatus handles PUT requests to update a status entity
+// @Summary Update a status entity by ID
+// @Description update status by ID
+// @ID update-status
 // @Accept   json
 // @Produce  json
-// @Param id path int true "User ID"
-// @Param user body ent.User true "User entity"
-// @Success 200 {object} ent.User
+// @Param id path int true "Status ID"
+// @Param status body ent.Status true "Status entity"
+// @Success 200 {object} ent.Status
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /users/{id} [put]
-func (ctl *UserController) UpdateUser(c *gin.Context) {
+// @Router /statuses/{id} [put]
+func (ctl *StatusController) UpdateStatus(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -182,15 +182,15 @@ func (ctl *UserController) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	obj := ent.User{}
+	obj := ent.Status{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
-			"error": "user binding failed",
+			"error": "status binding failed",
 		})
 		return
 	}
 	obj.ID = int(id)
-	u, err := ctl.client.User.
+	u, err := ctl.client.Status.
 		UpdateOne(&obj).
 		Save(context.Background())
 	if err != nil {
@@ -201,9 +201,9 @@ func (ctl *UserController) UpdateUser(c *gin.Context) {
 	c.JSON(200, u)
 }
 
-// NewUserController creates and registers handles for the user controller
-func NewUserController(router gin.IRouter, client *ent.Client) *UserController {
-	uc := &UserController{
+// NewStatusController creates and registers handles for the status controller
+func NewStatusController(router gin.IRouter, client *ent.Client) *StatusController {
+	uc := &StatusController{
 		client: client,
 		router: router,
 	}
@@ -211,15 +211,15 @@ func NewUserController(router gin.IRouter, client *ent.Client) *UserController {
 	return uc
 }
 
-// InitUserController registers routes to the main engine
-func (ctl *UserController) register() {
-	users := ctl.router.Group("/users")
+// InitStatusController registers routes to the main engine
+func (ctl *StatusController) register() {
+	statuses := ctl.router.Group("/statuses")
 
-	users.GET("", ctl.ListUser)
+	statuses.GET("", ctl.ListStatus)
 
 	// CRUD
-	users.POST("", ctl.CreateUser)
-	users.GET(":id", ctl.GetUser)
-	users.PUT(":id", ctl.UpdateUser)
-	users.DELETE(":id", ctl.DeleteUser)
+	statuses.POST("", ctl.CreateStatus)
+	statuses.GET(":id", ctl.GetStatus)
+	statuses.PUT(":id", ctl.UpdateStatus)
+	statuses.DELETE(":id", ctl.DeleteStatus)
 }

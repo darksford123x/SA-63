@@ -8,24 +8,138 @@ import (
 )
 
 var (
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
+	// DevicesColumns holds the columns for the "devices" table.
+	DevicesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "age", Type: field.TypeInt},
-		{Name: "name", Type: field.TypeString},
+		{Name: "device_id", Type: field.TypeInt, Unique: true},
+		{Name: "customer_id", Type: field.TypeInt, Unique: true},
 	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:        "users",
-		Columns:     UsersColumns,
-		PrimaryKey:  []*schema.Column{UsersColumns[0]},
+	// DevicesTable holds the schema information for the "devices" table.
+	DevicesTable = &schema.Table{
+		Name:        "devices",
+		Columns:     DevicesColumns,
+		PrimaryKey:  []*schema.Column{DevicesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// RepairInvoicesColumns holds the columns for the "repair_invoices" table.
+	RepairInvoicesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "repair_invoice_id", Type: field.TypeInt, Unique: true},
+		{Name: "status_id", Type: field.TypeInt, Unique: true},
+		{Name: "device_id", Type: field.TypeInt, Unique: true},
+		{Name: "symptom_id", Type: field.TypeInt, Unique: true},
+		{Name: "device_devices", Type: field.TypeInt, Unique: true, Nullable: true},
+	}
+	// RepairInvoicesTable holds the schema information for the "repair_invoices" table.
+	RepairInvoicesTable = &schema.Table{
+		Name:       "repair_invoices",
+		Columns:    RepairInvoicesColumns,
+		PrimaryKey: []*schema.Column{RepairInvoicesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "repair_invoices_devices_devices",
+				Columns: []*schema.Column{RepairInvoicesColumns[5]},
+
+				RefColumns: []*schema.Column{DevicesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// StatusColumns holds the columns for the "status" table.
+	StatusColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "status_id", Type: field.TypeInt, Unique: true},
+		{Name: "status_name", Type: field.TypeString},
+	}
+	// StatusTable holds the schema information for the "status" table.
+	StatusTable = &schema.Table{
+		Name:        "status",
+		Columns:     StatusColumns,
+		PrimaryKey:  []*schema.Column{StatusColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// SymptomsColumns holds the columns for the "symptoms" table.
+	SymptomsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "symptom_id", Type: field.TypeInt, Unique: true},
+		{Name: "symptom_name", Type: field.TypeString},
+	}
+	// SymptomsTable holds the schema information for the "symptoms" table.
+	SymptomsTable = &schema.Table{
+		Name:        "symptoms",
+		Columns:     SymptomsColumns,
+		PrimaryKey:  []*schema.Column{SymptomsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// StatusStatusInvoiceColumns holds the columns for the "status_statusInvoice" table.
+	StatusStatusInvoiceColumns = []*schema.Column{
+		{Name: "status_id", Type: field.TypeInt},
+		{Name: "repair_invoice_id", Type: field.TypeInt},
+	}
+	// StatusStatusInvoiceTable holds the schema information for the "status_statusInvoice" table.
+	StatusStatusInvoiceTable = &schema.Table{
+		Name:       "status_statusInvoice",
+		Columns:    StatusStatusInvoiceColumns,
+		PrimaryKey: []*schema.Column{StatusStatusInvoiceColumns[0], StatusStatusInvoiceColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "status_statusInvoice_status_id",
+				Columns: []*schema.Column{StatusStatusInvoiceColumns[0]},
+
+				RefColumns: []*schema.Column{StatusColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "status_statusInvoice_repair_invoice_id",
+				Columns: []*schema.Column{StatusStatusInvoiceColumns[1]},
+
+				RefColumns: []*schema.Column{RepairInvoicesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// SymptomSymptomsColumns holds the columns for the "symptom_symptoms" table.
+	SymptomSymptomsColumns = []*schema.Column{
+		{Name: "symptom_id", Type: field.TypeInt},
+		{Name: "repair_invoice_id", Type: field.TypeInt},
+	}
+	// SymptomSymptomsTable holds the schema information for the "symptom_symptoms" table.
+	SymptomSymptomsTable = &schema.Table{
+		Name:       "symptom_symptoms",
+		Columns:    SymptomSymptomsColumns,
+		PrimaryKey: []*schema.Column{SymptomSymptomsColumns[0], SymptomSymptomsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "symptom_symptoms_symptom_id",
+				Columns: []*schema.Column{SymptomSymptomsColumns[0]},
+
+				RefColumns: []*schema.Column{SymptomsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "symptom_symptoms_repair_invoice_id",
+				Columns: []*schema.Column{SymptomSymptomsColumns[1]},
+
+				RefColumns: []*schema.Column{RepairInvoicesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		UsersTable,
+		DevicesTable,
+		RepairInvoicesTable,
+		StatusTable,
+		SymptomsTable,
+		StatusStatusInvoiceTable,
+		SymptomSymptomsTable,
 	}
 )
 
 func init() {
+	RepairInvoicesTable.ForeignKeys[0].RefTable = DevicesTable
+	StatusStatusInvoiceTable.ForeignKeys[0].RefTable = StatusTable
+	StatusStatusInvoiceTable.ForeignKeys[1].RefTable = RepairInvoicesTable
+	SymptomSymptomsTable.ForeignKeys[0].RefTable = SymptomsTable
+	SymptomSymptomsTable.ForeignKeys[1].RefTable = RepairInvoicesTable
 }
